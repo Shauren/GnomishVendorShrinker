@@ -12,7 +12,7 @@ local function OnClick(self, button)
 	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
 
 	local size = numAvailable > 0 and numAvailable or itemStackSize
-	OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
+	StackSplitFrame:OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
 end
 
 

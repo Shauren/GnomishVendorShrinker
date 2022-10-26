@@ -54,16 +54,21 @@ function ns.GetRowGradient(index)
 	end
 
 	local link = GetMerchantItemLink(index)
-	if not (link and Knowable(link)) then return gradient, shown end
+	if not (link and Knowable(link)) then
+    	return { r = gradient[1], g = gradient[2], b = gradient[3], a = gradient[4] }, { r = gradient[5], g = gradient[6], b = gradient[7], a = gradient[8] }, shown
+	end
 
 	if ns.knowns[link] then
-		return gradient, false
+		shown = false
 	elseif RecipeNeedsRank(link) then
-		return GRADS.red, true
+		gradient = GRADS.red
+		shown = true
 	else
 		local _, _, quality = GetItemInfo(link)
-		return GRADS[quality], true
+		gradient = GRADS[quality]
+		shown = true
 	end
+    return { r = gradient[1], g = gradient[2], b = gradient[3], a = gradient[4] }, { r = gradient[5], g = gradient[6], b = gradient[7], a = gradient[8] }, shown
 end
 
 

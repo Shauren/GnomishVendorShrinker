@@ -20,9 +20,9 @@ end
 
 
 local function GetCurencyCount(item)
-	for i=1,GetCurrencyListSize() do
-		local name, _, _, _, _, count = GetCurrencyListInfo(i)
-		if item == name then return count end
+	for i=1,C_CurrencyInfo.GetCurrencyListSize() do
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+		if item == info.name then return info.quantity end
 	end
 end
 

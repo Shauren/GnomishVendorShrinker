@@ -20,7 +20,7 @@ local function HasAllCommonBarterItems(index)
 		local _, _, link = GetMerchantItemCostItem(index, i)
 		if link then
 			local _, _, quality = GetItemInfo(link)
-			if quality >= LE_ITEM_QUALITY_UNCOMMON then return false end
+			if quality >= Enum.ItemQuality.Uncommon then return false end
 		end
 	end
 	return true
@@ -120,8 +120,8 @@ local function SetValue(self, i)
 	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
 	local link = GetMerchantItemLink(i)
 
-	local gradient, shown = ns.GetRowGradient(i)
-	self.backdrop:SetGradientAlpha("HORIZONTAL", unpack(gradient))
+	local minColor, maxColor, shown = ns.GetRowGradient(i)
+	self.backdrop:SetGradient("HORIZONTAL", minColor, maxColor)
 	self.backdrop:SetShown(shown)
 
 	self.icon:SetTexture(itemTexture)
