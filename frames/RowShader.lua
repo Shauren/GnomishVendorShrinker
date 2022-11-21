@@ -3,8 +3,6 @@ local myname, ns = ...
 
 
 
-local RECIPE = GetItemClassInfo(LE_ITEM_CLASS_RECIPE)
-local MISC = GetItemClassInfo(LE_ITEM_CLASS_MISCELLANEOUS)
 local GARRISON_ICONS = {[1001489] = true, [1001490] = true, [1001491] = true}
 
 
@@ -13,15 +11,18 @@ local function Knowable(link)
 	if not id then return false end
 	if C_Heirloom.IsItemHeirloom(id) then return true end
 
-	local _, _, _, _, _, class, _, _, _, texture = GetItemInfo(link)
-	if class == MISC and select(2, C_ToyBox.GetToyInfo(id)) then return true end
-	if class == RECIPE or GARRISON_ICONS[texture] then return true end
+	local _, _, _, _, texture, classID, subclassID = GetItemInfoInstant(link)
+	if classID == Enum.ItemClass.Miscellaneous and select(2, C_ToyBox.GetToyInfo(id)) then return true end
+	if classID == Enum.ItemClass.Recipe or GARRISON_ICONS[texture] then return true end
+	if classID == Enum.ItemClass.Consumable and C_Item.IsDressableItemByID(id) then return true end
+	if classID == Enum.ItemClass.Armor and subclassID == Enum.ItemArmorSubclass.Cosmetic then return true end
+	if classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then return true end
 end
 
 
 local function RecipeNeedsRank(link)
-	local _, _, _, _, _, class = GetItemInfo(link)
-	if class ~= RECIPE then return end
+	local _, _, _, _, _, classID = GetItemInfoInstant(link)
+	if classID ~= Enum.ItemClass.Recipe then return end
 	return ns.unmet_requirements[link]
 end
 

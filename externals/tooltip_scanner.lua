@@ -2,8 +2,9 @@
 local myname, ns = ...
 
 
-local tip = CreateFrame("GameTooltip")
+local tip = CreateFrame("GameTooltip", nil, nil, "GameTooltipTemplate")
 tip:SetOwner(WorldFrame, "ANCHOR_NONE")
+tip.isShopping = true
 
 ns.scantip = tip
 

@@ -10,7 +10,9 @@ end
 local function IsKnown(link)
 	ns.scantip:SetHyperlink(link)
 	for i=1,ns.scantip:NumLines() do
-		if ns.scantip.L[i] == ITEM_SPELL_KNOWN then return true end
+		local line = ns.scantip.L[i]
+		if line == ITEM_SPELL_KNOWN then return true end
+		if line == ERR_COSMETIC_KNOWN then return true end
 	end
 end
 
