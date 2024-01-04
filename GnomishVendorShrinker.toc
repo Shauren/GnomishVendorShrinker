@@ -1,4 +1,4 @@
-## Interface: 100000
+## Interface: 100200
 
 ## Title: GnomishVendorShrinker
 ## Notes: Compact scrolling vendor frame
@@ -13,7 +13,6 @@ externals\events.lua
 externals\gsc.lua
 externals\itemid.lua
 externals\size_to_fit.lua
-externals\tooltip_scanner.lua
 externals\ui-scrollbar.lua
 externals\ui-textinput.lua
 
