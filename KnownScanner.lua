@@ -25,6 +25,16 @@ function IsKnown(link)
 			if line.leftText == ERR_COSMETIC_KNOWN then return true end
 		end
 	end
+	local _, itemModifiedAppearanceID = C_TransmogCollection.GetItemInfo(link)
+	if itemModifiedAppearanceID then
+		if C_TransmogCollection.PlayerHasTransmogItemModifiedAppearance(itemModifiedAppearanceID) then return true end
+	else
+		-- some items don't have return anything from C_TransmogCollection.GetItemInfo (caused by missing itemid+itemAppearanceModID pair in ItemModifiedAppearance)
+		-- in such cases the game falls back to itemid+0 pair to display the model ingame
+		-- but this is not exposed in C_TransmogCollection.GetItemInfo
+		-- on the other hand C_TransmogCollection.PlayerHasTransmogByItemInfo always does the lookup using itemid+0 pair so we cannot only use that to determine learned status
+		if C_TransmogCollection.PlayerHasTransmogByItemInfo(link) then return true end
+	end
 end
 
 

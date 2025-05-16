@@ -14,8 +14,17 @@ local function Knowable(link)
 	local _, _, _, _, texture, classID, subclassID = GetItemInfoInstant(link)
 	if classID == Enum.ItemClass.Miscellaneous and select(2, C_ToyBox.GetToyInfo(id)) then return true end
 	if classID == Enum.ItemClass.Recipe or GARRISON_ICONS[texture] then return true end
-	if classID == Enum.ItemClass.Consumable and C_Item.IsDressableItemByID(id) then return true end
-	if classID == Enum.ItemClass.Armor and subclassID == Enum.ItemArmorSubclass.Cosmetic then return true end
+	if C_Item.IsDressableItemByID(id) then 
+		local _, itemModifiedAppearanceID = C_TransmogCollection.GetItemInfo(link)
+		if not itemModifiedAppearanceID then
+			itemModifiedAppearanceID = select(2, C_TransmogCollection.GetItemInfo(id))
+		end
+		if itemModifiedAppearanceID and (select(2, C_TransmogCollection.AccountCanCollectSource(itemModifiedAppearanceID)) or select(2, C_TransmogCollection.PlayerCanCollectSource(itemModifiedAppearanceID))) then
+			return true
+		end
+		if C_Item.GetItemLearnTransmogSet(link) then return true end
+	end
+	if C_Item.IsCosmeticItem(id) then return true end
 	if classID == Enum.ItemClass.Miscellaneous and subclassID == Enum.ItemMiscellaneousSubclass.Mount then return true end
 end
 
@@ -73,25 +82,23 @@ function ns.GetRowGradient(index)
 end
 
 
-local QUALITY_COLORS = setmetatable({}, {
-	__index = function(t,i)
-		-- GetItemQualityColor only takes numbers, so fall back to white
-		local _, _, _, hex = GetItemQualityColor(tonumber(i) or 1)
-		t[i] = "|c".. hex
-		return "|c".. hex
-	end
-})
+function ns.GetItemQualityColor(quality)
+	local _, _, _, hex = GetItemQualityColor(quality)
+	return "|c"..hex
+end
 
+local NON_EQUIP_LOC = C_Item.GetItemInventorySlotKey(0)
 
 function ns.GetRowTextColor(index)
 	local link = GetMerchantItemLink(index)
-	if not link then return QUALITY_COLORS.default end
+	if not link then return ns.GetItemQualityColor(1) end
+
+	local _, _, quality, _, _, _, _, _, itemEquipLoc = GetItemInfo(link)
 
 	-- Grey out if already known
-	if Knowable(link) and ns.knowns[link] then return QUALITY_COLORS[0] end
+	if (not itemEquipLoc or itemEquipLoc == NON_EQUIP_LOC) and Knowable(link) and ns.knowns[link] then return ns.GetItemQualityColor(0) end
 
-	local _, _, quality = GetItemInfo(link)
-	return QUALITY_COLORS[quality or 1]
+	return ns.GetItemQualityColor(quality or 1)
 end
 
 
