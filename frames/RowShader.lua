@@ -57,8 +57,8 @@ function ns.GetRowGradient(index)
 	local gradient = DEFAULT_GRAD
 	local shown = false
 
-	local _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
-	if not isUsable then
+	local info = C_MerchantFrame.GetItemInfo(index)
+	if not info.isUsable or not info.isPurchasable then
 		gradient = GRADS.red
 		shown = true
 	end
@@ -96,15 +96,15 @@ function ns.GetRowTextColor(index)
 	local _, _, quality, _, _, _, _, _, itemEquipLoc = GetItemInfo(link)
 
 	-- Grey out if already known
-	if (not itemEquipLoc or itemEquipLoc == NON_EQUIP_LOC) and Knowable(link) and ns.knowns[link] then return ns.GetItemQualityColor(0) end
+	if (not itemEquipLoc or itemEquipLoc == NON_EQUIP_LOC or C_Item.IsCosmeticItem(link)) and Knowable(link) and ns.knowns[link] then return ns.GetItemQualityColor(0) end
 
 	return ns.GetItemQualityColor(quality or 1)
 end
 
 
 function ns.GetRowVertexColor(index)
-	local _, _, _, _, _, isUsable = GetMerchantItemInfo(index)
-	if isUsable then return 1.0, 1.0, 1.0
-	else             return 0.9, 0.0, 0.0
+	local info = C_MerchantFrame.GetItemInfo(index)
+	if info.isUsable and info.isPurchasable then return 1.0, 1.0, 1.0
+	else                                         return 0.9, 0.0, 0.0
 	end
 end

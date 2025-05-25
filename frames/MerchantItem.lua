@@ -89,10 +89,10 @@ end
 
 
 function ns.Purchase(id, quantity)
-	local _, _, _, _, available = GetMerchantItemInfo(id)
+	local info = C_MerchantFrame.GetItemInfo(id)
 	local max = GetMerchantItemMaxStack(id)
 
-	if available > 0 and available < quantity then quantity = available end
+	if info.numAvailable > 0 and info.numAvailable < quantity then quantity = info.numAvailable end
 	local purchased = 0
 	while purchased < quantity do
 		local buyamount = math.min(max, quantity - purchased)
@@ -104,12 +104,11 @@ end
 
 local function BuyItem(self, fullstack)
 	local id = self:GetID()
-	local link = GetMerchantItemLink(id)
-	if not link then return end
+	local info = C_MerchantFrame.GetItemInfo(id)
+	if not info then return end
 
-	local _, _, _, vendorStackSize = GetMerchantItemInfo(id)
-	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
-	ns.Purchase(id, fullstack and itemStackSize or vendorStackSize or 1)
+	local itemStackSize = GetMerchantItemMaxStack(id)
+	ns.Purchase(id, fullstack and itemStackSize or info.stackCount or 1)
 end
 
 
@@ -117,22 +116,22 @@ local function SetValue(self, i)
 	self:SetID(i)
 	self:Show()
 
-	local name, itemTexture, itemPrice, itemStackCount, numAvailable, isUsable, extendedCost = GetMerchantItemInfo(i)
+	local info = C_MerchantFrame.GetItemInfo(i)
 	local link = GetMerchantItemLink(i)
 
 	local minColor, maxColor, shown = ns.GetRowGradient(i)
 	self.backdrop:SetGradient("HORIZONTAL", minColor, maxColor)
 	self.backdrop:SetShown(shown)
 
-	self.icon:SetTexture(itemTexture)
+	self.icon:SetTexture(info.texture)
 	self.icon:SetVertexColor(ns.GetRowVertexColor(i))
 
 	local textcolor = ns.GetRowTextColor(i)
 	local text =
-		(numAvailable > -1 and ("["..numAvailable.."] ") or "")..
+		(info.numAvailable > -1 and ("["..info.numAvailable.."] ") or "")..
 		textcolor..
-		(name or "<Loading item data>")..
-		(itemStackCount > 1 and ("|r x"..itemStackCount) or "")
+		(info.name or "<Loading item data>")..
+		(info.stackCount > 1 and ("|r x"..info.stackCount) or "")
 	self.ItemName:SetText(text)
 
 	self.AltCurrency:SetValue(i)
@@ -142,20 +141,17 @@ local function SetValue(self, i)
 	    self.ItemName:SetPoint("RIGHT", self.ItemPrice, "LEFT", -GAP, 0)
 	end
 
-	if extendedCost then
-		self.link, self.texture, self.extendedCost = link, itemTexture, true
-	end
-	if itemPrice > 0 then
-		self.ItemPrice:SetText(ns.GSC(itemPrice))
-		self.Price = itemPrice
-	end
-	if extendedCost and (itemPrice <= 0) then
+	if info.price > 0 then
+		self.ItemPrice:SetText(ns.GSC(info.price))
+		self.Price = info.price
+	else
 		self.ItemPrice:SetText("")
 		self.Price = 0
-	elseif extendedCost and (itemPrice > 0) then
-		self.ItemPrice:SetText(ns.GSC(itemPrice))
+	end
+	if info.hasExtendedCost then
+		self.link, self.texture, self.extendedCost = link, info.texture, true
 	else
-		self.extendedCost = nil
+		self.link, self.texture, self.extendedCost = nil, nil, nil
 	end
 end
 

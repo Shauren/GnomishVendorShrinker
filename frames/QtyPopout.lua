@@ -7,12 +7,7 @@ local function OnClick(self, button)
 	local link = GetMerchantItemLink(id)
 	if not link then return end
 
-	local _, _, _, vendorStackSize, numAvailable = GetMerchantItemInfo(id)
-	local maxPurchase = GetMerchantItemMaxStack(id)
-	local _, _, _, _, _, _, _, itemStackSize = GetItemInfo(link)
-
-	local size = numAvailable > 0 and numAvailable or itemStackSize
-	StackSplitFrame:OpenStackSplitFrame(250, self, "LEFT", "RIGHT")
+	StackSplitFrame:OpenStackSplitFrame(1000, self, "LEFT", "RIGHT")
 end
 
 
