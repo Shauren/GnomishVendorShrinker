@@ -21,8 +21,7 @@ function IsKnown(link)
 		if i >= blockUntil then
 			local line = data.lines[i]
 			if line.type == Enum.TooltipDataLineType.NestedBlock and line.tooltipType == Enum.TooltipDataType.Item then blockUntil = i + GetNestedItemTooltipLineCount(line.tooltipID) end
-			if line.type == Enum.TooltipDataLineType.RestrictedSpellKnown then return true end
-			if line.leftText == ERR_COSMETIC_KNOWN then return true end
+			if line.leftText == ITEM_SPELL_KNOWN or line.leftText == ERR_COSMETIC_KNOWN then return true end
 		end
 	end
 	local _, itemModifiedAppearanceID = C_TransmogCollection.GetItemInfo(link)
