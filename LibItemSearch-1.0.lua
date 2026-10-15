@@ -188,7 +188,7 @@ ItemSearch:RegisterTypedSearch{
 	end,
 
 	findItem = function(self, itemLink, search)
-		local itemName = (GetItemInfo(itemLink))
+		local itemName = (C_Item.GetItemInfo(itemLink))
 		return search_IsInText(search, itemName)
 	end
 }
@@ -204,7 +204,7 @@ ItemSearch:RegisterTypedSearch{
 	end,
 
 	findItem = function(self, itemLink, search)
-		local name, link, quality, iLevel, reqLevel, type, subType, maxStack, equipSlot = GetItemInfo(itemLink)
+		local name, link, quality, iLevel, reqLevel, type, subType, maxStack, equipSlot = C_Item.GetItemInfo(itemLink)
 		if not name then
 			return false
 		end
@@ -239,7 +239,7 @@ ItemSearch:RegisterTypedSearch{
 	end,
 
 	findItem = function(self, itemLink, op, search)
-		local name, link, quality = GetItemInfo(itemLink)
+		local name, link, quality = C_Item.GetItemInfo(itemLink)
 		if not name then
 			return false
 		end
@@ -261,7 +261,7 @@ ItemSearch:RegisterTypedSearch{
 	end,
 
 	findItem = function(self, itemLink, op, search)
-		local name, link, quality, iLvl = GetItemInfo(itemLink)
+		local name, link, quality, iLvl = C_Item.GetItemInfo(itemLink)
 		if not iLvl then
 			return false
 		end
@@ -352,8 +352,7 @@ ItemSearch:RegisterTypedSearch{
 --[[ equipment set search ]]--
 
 local function IsWardrobeLoaded()
-	local name, title, notes, enabled, loadable, reason, security = GetAddOnInfo('Wardrobe')
-	return enabled
+	return C_AddOns.GetAddOnEnableState('Wardrobe', UnitGUID('player')) ~= Enum.AddOnEnableState.None
 end
 
 local function findEquipmentSetByName(search)
@@ -415,7 +414,7 @@ end
 local function isItemInWardrobeSet(itemLink, setName)
 	if not Wardrobe then return false end
 
-	local itemName = (GetItemInfo(itemLink))
+	local itemName = (C_Item.GetItemInfo(itemLink))
 	for i, outfit in ipairs(Wardrobe.CurrentConfig.Outfit) do
 		if outfit.OutfitName == setName then
 			for j, item in pairs(outfit.Item) do

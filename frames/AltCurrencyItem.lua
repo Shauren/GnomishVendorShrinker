@@ -29,7 +29,7 @@ end
 
 local function GetQtyOwned(item)
 	local id = ns.ids[item]
-	if id then return GetItemCount(id, true) or 0 end
+	if id then return C_Item.GetItemCount(id, true) or 0 end
 
 	return GetCurencyCount(item) or 0
 end

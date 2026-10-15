@@ -11,7 +11,7 @@ local function Knowable(link)
 	if not id then return false end
 	if C_Heirloom.IsItemHeirloom(id) then return true end
 
-	local _, _, _, _, texture, classID, subclassID = GetItemInfoInstant(link)
+	local _, _, _, _, texture, classID, subclassID = C_Item.GetItemInfoInstant(link)
 	if classID == Enum.ItemClass.Miscellaneous and select(2, C_ToyBox.GetToyInfo(id)) then return true end
 	if classID == Enum.ItemClass.Recipe or GARRISON_ICONS[texture] then return true end
 	if C_Item.IsDressableItemByID(id) then 
@@ -30,7 +30,7 @@ end
 
 
 local function RecipeNeedsRank(link)
-	local _, _, _, _, _, classID = GetItemInfoInstant(link)
+	local _, _, _, _, _, classID = C_Item.GetItemInfoInstant(link)
 	if classID ~= Enum.ItemClass.Recipe then return end
 	return ns.unmet_requirements[link]
 end
@@ -74,7 +74,7 @@ function ns.GetRowGradient(index)
 		gradient = GRADS.red
 		shown = true
 	else
-		local _, _, quality = GetItemInfo(link)
+		local _, _, quality = C_Item.GetItemInfo(link)
 		gradient = GRADS[quality]
 		shown = true
 	end
@@ -83,7 +83,7 @@ end
 
 
 function ns.GetItemQualityColor(quality)
-	local _, _, _, hex = GetItemQualityColor(quality)
+	local _, _, _, hex = C_Item.GetItemQualityColor(quality)
 	return "|c"..hex
 end
 
@@ -93,7 +93,7 @@ function ns.GetRowTextColor(index)
 	local link = GetMerchantItemLink(index)
 	if not link then return ns.GetItemQualityColor(1) end
 
-	local _, _, quality, _, _, _, _, _, itemEquipLoc = GetItemInfo(link)
+	local _, _, quality, _, _, _, _, _, itemEquipLoc = C_Item.GetItemInfo(link)
 
 	-- Grey out if already known
 	if (not itemEquipLoc or itemEquipLoc == NON_EQUIP_LOC or C_Item.IsCosmeticItem(link)) and Knowable(link) and ns.knowns[link] then return ns.GetItemQualityColor(0) end

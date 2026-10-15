@@ -19,7 +19,7 @@ local function HasAllCommonBarterItems(index)
 	for i=1,MAX_ITEM_COST do
 		local _, _, link = GetMerchantItemCostItem(index, i)
 		if link then
-			local _, _, quality = GetItemInfo(link)
+			local _, _, quality = C_Item.GetItemInfo(link)
 			if quality >= Enum.ItemQuality.Uncommon then return false end
 		end
 	end

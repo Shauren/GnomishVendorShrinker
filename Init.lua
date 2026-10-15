@@ -27,7 +27,8 @@ function ns.OnLoad()
 
 	-- The little class select dropdown show trigget a refresh
 	hooksecurefunc("SetMerchantFilter", function()
-		if GVS.Merchant ~= UnitGUID("npc") then
+		local npc = UnitGUID("npc")
+		if not issecretvalue(npc) and GVS.Merchant ~= UnitGUID("npc") then
 			GVS:GetScript("OnShow")(GVS)
 		else
 			GVS:GetScript("OnEvent")(GVS)
